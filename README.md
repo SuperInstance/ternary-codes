@@ -85,6 +85,20 @@ The **RepetitionCode** simply repeats each symbol `n` times and decodes via `maj
 - **Balanced ternary communication**: Error-correcting codes for balanced ternary signaling schemes.
 - **Ternary logic circuit testing**: Parity and repetition codes for built-in self-test (BIST) of ternary circuits.
 
+## Known Limitations
+
+- **TernaryHamming decoding is brute-force**: The `decode()` method computes the syndrome and then iterates over all possible single-symbol error positions and values to find the correction. This is O(n × 3) per codeword, which is fine for the short block lengths ternary Hamming codes produce (n ≤ 13 for r=3), but would not scale to longer codes.
+
+- **Block lengths are limited by the Hamming formula**: `n = (3ʳ − 1)/2` grows exponentially with `r`, but `r` is stored as `usize`. For r ≥ 20, `3ʳ` overflows `usize` on 64-bit platforms. The constructor does not check for overflow, so `TernaryHamming::new(40)` would silently compute a wrong block length.
+
+- **RepetitionCode has no streaming interface**: `encode()` and `decode()` require the full input upfront. For long data streams, you must buffer the entire message before decoding, which defeats the purpose of streaming error correction.
+
+- **Majority vote can return Zero on true ties**: When a symbol is repeated an even number of times and votes are split (e.g., 2 Pos, 2 Neg, 1 Zero), `majority_vote()` returns `Zero`. This may not be the desired behavior — some applications prefer to flag the ambiguity rather than silently resolve to the neutral value.
+
+- **Parity encoding only detects single-symbol errors**: `parity_verify()` computes the sum mod 3 and compares against the check symbol. Two-symbol errors (which are the most common in burst-error channels) can cancel out in GF(3), making them undetectable.
+
+- **`minimum_distance()` is O(m² × n)**: Computing minimum pairwise distance across a codebook with `m` codewords of length `n` requires comparing all pairs. For large codebooks (m > 1000), this is slow. No caching or early-exit optimization is implemented.
+
 ## Ecosystem
 
 Part of the **SuperInstance** ternary computing suite:
