@@ -1,0 +1,10 @@
+[package]
+name = "ternary-codes"
+version = "0.1.0"
+edition = "2021"
+description = "Error-correcting codes for ternary data including Hamming codes, repetition codes, parity checks, and code distance calculation"
+license = "MIT"
+authors = ["SuperInstance"]
+repository = "https://github.com/SuperInstance/ternary-codes"
+keywords = ["ternary", "error-correcting", "hamming", "coding-theory"]
+categories = ["algorithms", "encoding", "mathematics"]
