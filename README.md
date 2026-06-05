@@ -117,3 +117,11 @@ Part of the **SuperInstance** ternary computing suite:
 ## License
 
 MIT
+
+## See Also
+- **ternary-hash** — related
+- **ternary-steganography** — related
+- **ternary-entropy** — related
+- **ternary-compression** — related
+- **ternary-ring** — related
+
